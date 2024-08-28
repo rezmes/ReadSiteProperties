@@ -74,6 +74,26 @@ export default class ReadSitePropertiesWebPart extends BaseClientSideWebPart<IRe
 
 
 
+
+
+protected onInit(): Promise<void> {
+  return new Promise<void>((resolve, _reject) => {
+   this.properties.productname = "mouse";
+   this.properties.productdescription = "Mouse Description"
+  this.properties.quantity = 500;
+  this.properties.productcost = 500;
+
+  resolve(undefined);
+
+  })
+
+}
+
+
+
+
+
+
   public render(): void {
     this.domElement.innerHTML = `
       <div class="${styles.readSiteProperties}">
