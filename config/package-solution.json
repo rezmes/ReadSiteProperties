@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
+  "solution": {
+    "name": "read-site-properties-client-side-solution",
+    "id": "92f0f915-fa55-4548-8df0-a4142ce0f237",
+    "version": "1.0.0.0",
+    "includeClientSideAssets": true
+  },
+  "paths": {
+    "zippedPackage": "solution/read-site-properties.sppkg"
+  }
+}
