@@ -3,6 +3,7 @@ import {
   BaseClientSideWebPart,
   IPropertyPaneConfiguration,
   PropertyPaneTextField,
+  PropertyPaneToggle
 } from "@microsoft/sp-webpart-base";
 import { escape, truncate } from "@microsoft/sp-lodash-subset";
 
@@ -89,6 +90,9 @@ protected onInit(): Promise<void> {
 
 }
 
+protected get disableReactivePropertyChanges() : boolean {
+  return false;
+}
 
 
 
