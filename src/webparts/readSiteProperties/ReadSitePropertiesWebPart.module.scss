@@ -72,3 +72,15 @@
     }
   }
 }
+
+.list {
+  @include ms-fontColor-white;
+  @include ms-font-xl;
+color: #333;
+}
+.listItem {
+  @include ms-fontColor-white;
+  @include ms-font-l;
+color: #333;
+
+}

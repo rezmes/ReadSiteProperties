@@ -10,12 +10,77 @@ import styles from "./ReadSitePropertiesWebPart.module.scss";
 import * as strings from "ReadSitePropertiesWebPartStrings";
 import { Environment, EnvironmentType } from "@microsoft/sp-core-library";
 
+import { SPHttpClient, SPHttpClientResponse } from "@microsoft/sp-http";
+
 export interface IReadSitePropertiesWebPartProps {
   description: string;
   environmenttitle: string;
 }
 
+export interface ISharePointList {
+  Title: string;
+  Id: string;
+}
+
+export interface ISharePointLists {
+value: ISharePointList[];
+}
+
+
+
 export default class ReadSitePropertiesWebPart extends BaseClientSideWebPart<IReadSitePropertiesWebPartProps> {
+
+// filter=Hidden eq false instead of select=Title,Id
+private _getListsOfLists(): Promise<ISharePointLists> {
+  return this.context.spHttpClient.get(
+      `${this.context.pageContext.web.absoluteUrl}/_api/web/lists?$filter=Hidden eq false`,
+      SPHttpClient.configurations.v1
+    ).then((response: SPHttpClientResponse) => {
+      // console.log("Response::::::::",response.json());
+      return response.json();
+
+    });
+
+  }
+
+
+  private _getAndRenderLists(): void {
+    if(Environment.type ===EnvironmentType.Local){
+
+    }
+    else if (
+      Environment.type == EnvironmentType.SharePoint ||
+       Environment.type == EnvironmentType.ClassicSharePoint
+      ){
+      this._getListsOfLists()
+        .then((response)=>{
+           this._renderListOfLists(response.value)
+      });
+    }
+  }
+private _renderListOfLists(items: ISharePointList[]):void {
+  let html: string = "";
+  items.forEach((item: ISharePointList) => {
+    html += `
+      <ul class="${styles.list}">
+        <li class="${styles.listItem}"><span class="ms-font-1">${item.Title}</span></li>
+        <li class="${styles.listItem}"><span class="ms-font-1">${item.Id}</span></li>
+      </ul>
+    `;
+  });
+  const listsContainer: Element = this.domElement.querySelector(
+    "#spListContainer"
+  );
+  listsContainer.innerHTML = html;
+}
+
+
+
+
+
+
+
+
   private _findOutEnvironment(): void {
     //Local environment
     if (Environment.type === EnvironmentType.Local) {
@@ -86,8 +151,9 @@ export default class ReadSitePropertiesWebPart extends BaseClientSideWebPart<IRe
             </div>
           </div>
         </div>
+        <div Id="spListContainer"/>
       </div>`;
-
+        this._getAndRenderLists();
     this._findOutEnvironment();
   }
 
